@@ -1,0 +1,5 @@
+[workspace]
+members = [
+    "riso-3166",
+    "riso-639",
+]
