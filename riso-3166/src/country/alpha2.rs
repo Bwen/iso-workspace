@@ -1,9 +1,8 @@
 use std::fmt;
-use serde::{Serialize, Deserialize};
-use strum_macros::{AsRefStr, EnumIter, EnumString};
+//use serde::{Serialize, Deserialize};
+//#[derive(Serialize, Deserialize)]
 
-#[derive(Debug, Eq, PartialEq, Copy, Clone, AsRefStr, EnumString, EnumIter)]
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Eq, PartialEq)]
 pub enum Alpha2 {
     // ENUM START
     AD,

@@ -1,21 +1,23 @@
 use std::str::FromStr;
-use strum::{IntoEnumIterator};
 
 extern crate riso_3166;
 use riso_3166::country::{Country, Numeric, Alpha2, Alpha3};
+#[cfg(feature = "subdivisions")]
 use riso_3166::subdivision::{Subdivision, Code};
-use riso_3166::IterFor;
+use riso_3166::{FindFor, IterFor};
 
+#[cfg(feature = "subdivisions")]
 #[test]
-fn sanity_checks() {
-    let total = Subdivision::count();
+//fn sanity_checks() {
+//    let total = Subdivision::count();
     // We plus 1 because of the Code::None that is added
-    assert_eq!(Code::iter().count(), total + 1);
-}
+//    assert_eq!(Code::iter().count(), total + 1);
+//}
 
+#[cfg(feature = "subdivisions")]
 #[test]
 fn subdivision_from() {
-    let subdivision = Subdivision::from(Code::CA_QC);
+    let subdivision = Subdivision::find_for(Code::CA_QC);
     assert_eq!(subdivision.alpha2, Alpha2::CA);
     assert_eq!(subdivision.alpha3, Alpha3::CAN);
     assert_eq!(subdivision.numeric, Numeric::N124);
@@ -24,6 +26,7 @@ fn subdivision_from() {
     assert_eq!(subdivision.parent, Code::None);
 }
 
+#[cfg(feature = "subdivisions")]
 #[test]
 fn subdivision_iterfor() {
     let subdivisions = Subdivision::iter_for(Alpha2::CA);

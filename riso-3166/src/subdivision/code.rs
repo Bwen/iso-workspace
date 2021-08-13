@@ -1,10 +1,9 @@
 use std::fmt;
-use serde::{Serialize, Deserialize};
-use strum_macros::{AsRefStr, EnumIter, EnumString};
+//use serde::{Serialize, Deserialize};
+//#[derive(Serialize, Deserialize)]
 
 #[allow(non_camel_case_types)]
-#[derive(Debug, Eq, PartialEq, Copy, Clone, AsRefStr, EnumString, EnumIter)]
-#[derive(Serialize, Deserialize)]
+#[derive(Debug,  Eq, PartialEq)]
 pub enum Code {
     None,
     // ENUM START
