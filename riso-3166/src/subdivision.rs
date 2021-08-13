@@ -1,5 +1,5 @@
 use crate::country::{Alpha2, Alpha3, Numeric};
-use crate::{TryFor, FindFor, IterFor};
+use crate::{FindFor, IterFor};
 
 mod code;
 pub use code::Code;
@@ -20,7 +20,7 @@ pub struct Subdivision {
 
 impl FindFor<Code> for Subdivision {
     fn find_for(value: Code) -> &'static Self {
-        SUBDIVISIONS.iter().filter(|subdivision| subdivision.code == value).next().expect("Infallible")
+        SUBDIVISIONS.iter().find(|subdivision| subdivision.code == value).expect("Infallible")
     }
 }
 

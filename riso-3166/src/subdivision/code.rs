@@ -5135,17 +5135,14 @@ pub enum Code {
 
 impl Code {
     pub fn is_none(&self) -> bool {
-        match *self {
-            Code::None => true,
-            _ => false,
-        }
+        matches!(*self, Code::None)
     }
 }
 
 impl fmt::Display for Code {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let code = format!("{:?}", self);
-        let code_parts: Vec<&str> = code.split("_").collect();
-        write!(f, "{}", code_parts.join("-"))
+        let code_parts: Vec<&str> = code.split('_').collect();
+        write!(f, "{}", code_parts.join("_"))
     }
 }

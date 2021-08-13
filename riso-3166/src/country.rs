@@ -23,26 +23,26 @@ pub struct Country {
 
 impl FindFor<Alpha2> for Country {
     fn find_for(value: Alpha2) -> &'static Country {
-        COUNTRIES.iter().filter(|country| country.alpha2 == value).next().expect("Infallible")
+        COUNTRIES.iter().find(|country| country.alpha2 == value).expect("Infallible")
     }
 }
 
 impl FindFor<Alpha3> for Country {
     fn find_for(value: Alpha3) -> &'static Country {
-        COUNTRIES.iter().filter(|country| country.alpha3 == value).next().expect("Infallible")
+        COUNTRIES.iter().find(|country| country.alpha3 == value).expect("Infallible")
     }
 }
 
 impl FindFor<Numeric> for Country {
     fn find_for(value: Numeric) -> &'static Country {
-        COUNTRIES.iter().filter(|country| country.numeric == value).next().expect("Infallible")
+        COUNTRIES.iter().find(|country| country.numeric == value).expect("Infallible")
     }
 }
 
 impl TryFor<usize> for Country {
     fn try_for(value: usize) -> Result<&'static Self, &'static str> {
         let number = format!("N{:0>3}", value);
-        let result = COUNTRIES.iter().filter(|country| country.numeric.to_string() == number).next();
+        let result = COUNTRIES.iter().find(|country| country.numeric.to_string() == number);
         if result.is_some() {
             return Ok(result.expect("Infallible"));
         }
@@ -54,7 +54,7 @@ impl TryFor<usize> for Country {
 impl TryFor<&str> for Country {
     fn try_for(value: &str) -> Result<&'static Self, &'static str> {
         if value.len() == 2 {
-            let result = COUNTRIES.iter().filter(|country| country.alpha2.to_string() == value.to_ascii_uppercase()).next();
+            let result = COUNTRIES.iter().find(|country| country.alpha2.to_string() == value.to_ascii_uppercase());
             if result.is_some() {
                 return Ok(result.expect("Infallible"));
             }
@@ -63,7 +63,7 @@ impl TryFor<&str> for Country {
         }
 
         if value.len() == 3 {
-            let result = COUNTRIES.iter().filter(|country| country.alpha3.to_string() == value.to_ascii_uppercase()).next();
+            let result = COUNTRIES.iter().find(|country| country.alpha3.to_string() == value.to_ascii_uppercase());
             if result.is_some() {
                 return Ok(result.expect("Infallible"));
             }
@@ -73,7 +73,7 @@ impl TryFor<&str> for Country {
 
         if value.parse::<usize>().is_ok() {
             let numeric = format!("N{:0>3}", value);
-            let result = COUNTRIES.iter().filter(|country| country.numeric.to_string() == numeric).next();
+            let result = COUNTRIES.iter().find(|country| country.numeric.to_string() == numeric);
             if result.is_some() {
                 return Ok(result.expect("Infallible"));
             }
@@ -81,7 +81,7 @@ impl TryFor<&str> for Country {
             return Err("Could not find country for supplied numeric");
         }
 
-        let result = COUNTRIES.iter().filter(|country| country.name.to_ascii_uppercase() == value.to_ascii_uppercase()).next();
+        let result = COUNTRIES.iter().find(|country| country.name.to_ascii_uppercase() == value.to_ascii_uppercase());
         if result.is_some() {
             return Ok(result.expect("Infallible"));
         }
