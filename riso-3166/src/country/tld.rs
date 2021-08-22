@@ -1,11 +1,8 @@
 use std::fmt;
-use std::collections::HashMap;
-
-//use serde::{Serialize, Deserialize};
-//#[derive(Serialize, Deserialize)]
 
 #[derive(Debug, Eq, PartialEq)]
-pub enum Alpha2 {
+pub enum Tld {
+    None,
     // ENUM START
     AD,
     AE,
@@ -14,8 +11,8 @@ pub enum Alpha2 {
     AI,
     AL,
     AM,
+    AN,
     AO,
-    AQ,
     AR,
     AS,
     AT,
@@ -32,7 +29,6 @@ pub enum Alpha2 {
     BH,
     BI,
     BJ,
-    BL,
     BM,
     BN,
     BO,
@@ -57,6 +53,7 @@ pub enum Alpha2 {
     CN,
     CO,
     CR,
+    CS,
     CU,
     CV,
     CW,
@@ -83,7 +80,6 @@ pub enum Alpha2 {
     FO,
     FR,
     GA,
-    GB,
     GD,
     GE,
     GF,
@@ -147,7 +143,6 @@ pub enum Alpha2 {
     MC,
     MD,
     ME,
-    MF,
     MG,
     MH,
     MK,
@@ -238,6 +233,7 @@ pub enum Alpha2 {
     TZ,
     UA,
     UG,
+    UK,
     UM,
     US,
     UY,
@@ -259,29 +255,14 @@ pub enum Alpha2 {
     // ENUM END
 }
 
-impl fmt::Display for Alpha2 {
+impl fmt::Display for Tld {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{:?}", self)
     }
 }
 
-impl Alpha2 {
-    pub fn transitional_map() -> HashMap<&'static str, &'static str> {
-        let mut trans_map: HashMap<&str, &str> = HashMap::new();
-        trans_map.insert("CS", "RS"); // ME,
-        trans_map.insert("XK", "RS");
-        trans_map.insert("AN", "NL");
-        trans_map.insert("TP", "TL");
-        trans_map.insert("UK", "GB");
-        trans_map.insert("AC", "GB");
-        trans_map.insert("CQ", "GB");
-        trans_map.insert("DG", "GB");
-        trans_map.insert("TA", "GB");
-        trans_map.insert("IC", "ES");
-        trans_map.insert("EA", "ES");
-        trans_map.insert("FX", "FR");
-        trans_map.insert("FX", "FR");
-
-        trans_map
+impl Tld {
+    pub fn is_none(&self) -> bool {
+        matches!(*self, Tld::None)
     }
 }

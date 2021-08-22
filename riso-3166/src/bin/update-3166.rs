@@ -10,17 +10,17 @@ use std::io::Error;
 use std::path::Path;
 use std::collections::HashMap;
 
-const ISO_31661_DATA_FILE: &str = "riso-3166/raw_data/country-codes.csv";
-const ISO_31661_ALPHA2_FILE: &str = "riso-3166/src/country/alpha2.rs";
-const ISO_31661_ALPHA3_FILE: &str = "riso-3166/src/country/alpha3.rs";
-const ISO_31661_NUMERIC_FILE: &str = "riso-3166/src/country/numeric.rs";
-const ISO_31661_RUST_FILE: &str = "riso-3166/src/country/data.rs";
+const ISO_31661_DATA_FILE: &str = "raw_data/country-codes.csv";
+const ISO_31661_ALPHA2_FILE: &str = "src/country/alpha2.rs";
+const ISO_31661_ALPHA3_FILE: &str = "src/country/alpha3.rs";
+const ISO_31661_NUMERIC_FILE: &str = "src/country/numeric.rs";
+const ISO_31661_RUST_FILE: &str = "src/country/data.rs";
 
-const ISO_31662_CATEGORIES_DATA_FILE: &str = "riso-3166/raw_data/subdivision-categories.csv";
-const ISO_31662_NAME_DATA_FILE: &str = "riso-3166/raw_data/subdivision-names.csv";
-const ISO_31662_SUBDIVISIONS_DATA_FILE: &str = "riso-3166/raw_data/subdivisions.csv";
-const ISO_31662_SUBDIVISION_RUST_FILE: &str = "riso-3166/src/subdivision/data.rs";
-const ISO_31662_CODE_FILE: &str = "riso-3166/src/subdivision/code.rs";
+const ISO_31662_CATEGORIES_DATA_FILE: &str = "raw_data/subdivision-categories.csv";
+const ISO_31662_NAME_DATA_FILE: &str = "raw_data/subdivision-names.csv";
+const ISO_31662_SUBDIVISIONS_DATA_FILE: &str = "raw_data/subdivisions.csv";
+const ISO_31662_SUBDIVISION_RUST_FILE: &str = "src/subdivision/data.rs";
+const ISO_31662_CODE_FILE: &str = "src/subdivision/code.rs";
 
 fn main() {
     // update_31661();

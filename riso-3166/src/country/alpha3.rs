@@ -1,4 +1,6 @@
 use std::fmt;
+use std::collections::HashMap;
+
 //use serde::{Serialize, Deserialize};
 //#[derive(Serialize, Deserialize)]
 
@@ -260,5 +262,15 @@ pub enum Alpha3 {
 impl fmt::Display for Alpha3 {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{:?}", self)
+    }
+}
+
+impl Alpha3 {
+    pub fn transitional_map() -> HashMap<&'static str, &'static str> {
+        let mut trans_map: HashMap<&str, &str> = HashMap::new();
+        trans_map.insert("SCG", "SRB"); // MNE,
+        trans_map.insert("ANT", "NLD");
+
+        trans_map
     }
 }

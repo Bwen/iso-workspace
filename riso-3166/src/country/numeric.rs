@@ -1,4 +1,6 @@
 use std::fmt;
+use std::collections::HashMap;
+
 //use serde::{Serialize, Deserialize};
 //#[derive(Serialize, Deserialize)]
 
@@ -273,6 +275,17 @@ pub enum Numeric {
 
 impl fmt::Display for Numeric {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{:?}", self)
+        let numeric = format!("{:?}", self);
+        write!(f, "{}", &numeric[1..])
+    }
+}
+
+impl Numeric {
+    pub fn transitional_map() -> HashMap<usize, usize> {
+        let mut trans_map: HashMap<usize, usize> = HashMap::new();
+        trans_map.insert(891_usize, 688_usize); // 499,
+        trans_map.insert(530_usize, 528_usize);
+
+        trans_map
     }
 }
