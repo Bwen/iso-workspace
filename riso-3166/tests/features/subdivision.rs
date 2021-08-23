@@ -1,12 +1,10 @@
-use std::str::FromStr;
-
-extern crate riso_3166;
-use riso_3166::country::{Country, Numeric, Alpha2, Alpha3};
-use riso_3166::subdivision::{Subdivision, Code};
-use riso_3166::{FindFor, IterFor};
-
 mod subdivisions {
-    #[test]
+    extern crate riso_3166;
+    use riso_3166::country::Alpha2;
+    use riso_3166::subdivision::{Subdivision, Code};
+    use riso_3166::{FindFor, IterFor};
+    
+    //#[test]
     //fn sanity_checks() {
     //    let total = Subdivision::count();
         // We plus 1 because of the Code::None that is added
@@ -16,9 +14,7 @@ mod subdivisions {
     #[test]
     fn subdivision_from() {
         let subdivision = Subdivision::find_for(Code::CA_QC);
-        assert_eq!(subdivision.alpha2, Alpha2::CA);
-        assert_eq!(subdivision.alpha3, Alpha3::CAN);
-        assert_eq!(subdivision.numeric, Numeric::N124);
+        assert_eq!(subdivision.country, Alpha2::CA);
         assert_eq!(subdivision.category, "province");
         assert_eq!(subdivision.name, "Quebec");
         assert_eq!(subdivision.parent, Code::None);
@@ -31,14 +27,11 @@ mod subdivisions {
 
         for subdivision in subdivisions {
             if subdivision.code == Code::CA_QC {
-                assert_eq!(subdivision.alpha2, Alpha2::CA);
-                assert_eq!(subdivision.alpha3, Alpha3::CAN);
-                assert_eq!(subdivision.numeric, Numeric::N124);
+                assert_eq!(subdivision.country, Alpha2::CA);
                 assert_eq!(subdivision.category, "province");
                 assert_eq!(subdivision.name, "Quebec");
                 assert_eq!(subdivision.parent, Code::None);
             }
         }
-
     }
 }

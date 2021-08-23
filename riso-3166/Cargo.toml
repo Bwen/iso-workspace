@@ -12,16 +12,11 @@ grep-regex = { version = "0.1", optional = true }
 grep-searcher = { version = "0.1", optional = true }
 grep-matcher = { version = "0.1", optional = true }
 
-attohttpc = { version = "0.17", optional = true }
-scraper = { version = "0.12", optional = true }
-chrono = { version = "0.4", optional = true }
-
 [features]
 default = []
 country_details = []
 subdivisions = []
 subdivision_details = []
-crawler = ["attohttpc", "scraper", "chrono"]
 updater = [
     "grep-regex",
     "grep-searcher",
@@ -38,8 +33,3 @@ required-features = ["updater"]
 name = "update-3166-details"
 path = "src/bin/update-3166-details.rs"
 required-features = ["updater"]
-
-[[bin]]
-name = "wiki-crawler"
-path = "src/bin/wiki-crawler.rs"
-required-features = ["crawler"]

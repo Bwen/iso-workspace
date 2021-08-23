@@ -31,6 +31,6 @@ impl TryFor<&str> for Continent {
             return Ok(result.expect("Infallible"));
         }
 
-        return Err("Could not find continent for supplied string");
+        Err("Could not find continent for supplied string")
     }
 }

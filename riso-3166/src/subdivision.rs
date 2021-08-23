@@ -1,4 +1,4 @@
-use crate::country::{Alpha2, Alpha3, Numeric};
+use crate::country::Alpha2;
 use crate::{FindFor, IterFor};
 
 mod code;
@@ -9,9 +9,7 @@ use data::SUBDIVISIONS;
 
 #[derive(Debug, Eq, PartialEq)]
 pub struct Subdivision {
-    pub alpha2: Alpha2,
-    pub alpha3: Alpha3,
-    pub numeric: Numeric,
+    pub country: Alpha2,
     pub code: Code,
     pub parent: Code,
     pub name: &'static str,
@@ -26,19 +24,7 @@ impl FindFor<Code> for Subdivision {
 
 impl IterFor<Alpha2> for Subdivision {
     fn iter_for(value: Alpha2) -> Vec<&'static Self> {
-        SUBDIVISIONS.iter().filter(|subdivision| subdivision.alpha2 == value).collect()
-    }
-}
-
-impl IterFor<Alpha3> for Subdivision {
-    fn iter_for(value: Alpha3) -> Vec<&'static Self> {
-        SUBDIVISIONS.iter().filter(|subdivision| subdivision.alpha3 == value).collect()
-    }
-}
-
-impl IterFor<Numeric> for Subdivision {
-    fn iter_for(value: Numeric) -> Vec<&'static Self> {
-        SUBDIVISIONS.iter().filter(|subdivision| subdivision.numeric == value).collect()
+        SUBDIVISIONS.iter().filter(|subdivision| subdivision.country == value).collect()
     }
 }
 
