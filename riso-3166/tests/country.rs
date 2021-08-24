@@ -1,6 +1,6 @@
 extern crate riso_3166;
 use riso_3166::country::{Country, Numeric, Alpha2, Alpha3};
-use riso_3166::{FindFor, TryFor};
+use static_traits::{TryFor, FindFor};
 
 #[test]
 //fn sanity_checks() {

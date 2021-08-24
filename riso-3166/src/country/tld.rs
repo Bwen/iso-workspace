@@ -209,7 +209,6 @@ pub enum Tld {
     SN,
     SO,
     SR,
-    SS,
     ST,
     SV,
     SX,

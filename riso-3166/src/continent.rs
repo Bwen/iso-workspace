@@ -1,5 +1,5 @@
 use std::fmt;
-use crate::{TryFor, FindFor};
+use static_traits::{TryFor, FindFor};
 
 mod data;
 use data::CONTINENTS;

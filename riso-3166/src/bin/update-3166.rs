@@ -2,21 +2,23 @@ use grep_regex::RegexMatcher;
 use grep_searcher::sinks::UTF8;
 use grep_searcher::{Searcher, SearcherBuilder};
 use grep_matcher::{Captures, Matcher};
+use workspace_utils::{match_lines, replace_file_content, update_enum_file};
+
 // use ureq;
 use std::fs;
 use std::collections::HashMap;
 
-const ISO_31661_DATA_FILE: &str = "raw_data/country-codes.csv";
-const ISO_31661_ALPHA2_FILE: &str = "src/country/alpha2.rs";
-const ISO_31661_ALPHA3_FILE: &str = "src/country/alpha3.rs";
-const ISO_31661_NUMERIC_FILE: &str = "src/country/numeric.rs";
-const ISO_31661_RUST_FILE: &str = "src/country/data.rs";
+const FILE_SOURCE_31661: &str = "raw_data/country-codes.csv";
+const FILE_RUST_31661_ALPHA2: &str = "src/country/alpha2.rs";
+const FILE_RUST_31661_ALPHA3: &str = "src/country/alpha3.rs";
+const FILE_RUST_31661_NUMERIC: &str = "src/country/numeric.rs";
+const FILE_RUST_DATA_31661: &str = "src/country/data.rs";
 
-const ISO_31662_CATEGORIES_DATA_FILE: &str = "raw_data/subdivision-categories.csv";
-const ISO_31662_NAME_DATA_FILE: &str = "raw_data/subdivision-names.csv";
-const ISO_31662_SUBDIVISIONS_DATA_FILE: &str = "raw_data/subdivisions.csv";
-const ISO_31662_SUBDIVISION_RUST_FILE: &str = "src/subdivision/data.rs";
-const ISO_31662_CODE_FILE: &str = "src/subdivision/code.rs";
+const FILE_SOURCE_31662_CATEGORIES: &str = "raw_data/subdivision-categories.csv";
+const FILE_SOURCE_31662_NAMES: &str = "raw_data/subdivision-names.csv";
+const FILE_SOURCE_31662_SUBDIVISIONS: &str = "raw_data/subdivisions.csv";
+const FILE_RUST_DATA_31662_SUBDIVISION: &str = "src/subdivision/data.rs";
+const FILE_RUST_31662_CODES: &str = "src/subdivision/code.rs";
 
 fn main() {
     update_31661();
@@ -25,20 +27,22 @@ fn main() {
 
 fn update_31661() {
     let data: HashMap<&str, Vec<String>> = match_lines(
-        ISO_31661_DATA_FILE,
+        FILE_SOURCE_31661,
         "(?m)^\"([A-Z]{2})\",\"([A-Z]{3})\",\"([0-9]{1,3})\",\".*\",\"officially-assigned\",\"(.*)\",\".*\",\"(.*)\"",
         vec!["alpha2", "alpha3", "numeric", "name", "name_full"]
     );
 
-    update_enum_file(&data.get("alpha2").unwrap().clone(), ISO_31661_ALPHA2_FILE);
-    update_enum_file(&data.get("alpha3").unwrap().clone(), ISO_31661_ALPHA3_FILE);
-    update_enum_file(&data.get("numeric").unwrap().clone(), ISO_31661_NUMERIC_FILE);
+    let numerics: Vec<String> = data.get("numeric").unwrap().iter().map(|n| format!("N{}", n)).collect();
+
+    update_enum_file(&data.get("alpha2").unwrap().clone(), FILE_RUST_31661_ALPHA2);
+    update_enum_file(&data.get("alpha3").unwrap().clone(), FILE_RUST_31661_ALPHA3);
+    update_enum_file(&numerics, FILE_RUST_31661_NUMERIC);
     update_31661_data_file(data);
 }
 
 fn update_31662() {
     let mut data = match_lines(
-        ISO_31662_SUBDIVISIONS_DATA_FILE,
+        FILE_SOURCE_31662_SUBDIVISIONS,
         "(?m)^\"([A-Z]{2})\",\".*?\",\".*?\",\"([0-9]{3})\",\"([A-Z]{2}-.*)\",\".*\",\"(.*)\"",
         vec!["alpha2", "category_id", "code", "parent"]
     );
@@ -48,10 +52,10 @@ fn update_31662() {
         code_parts.join("_")
     }).collect();
     data.entry("sanitized_code").or_insert_with(|| sanitized_codes.clone());
-    update_enum_file(&sanitized_codes, ISO_31662_CODE_FILE);
+    update_enum_file(&sanitized_codes, FILE_RUST_31662_CODES);
     
     let categories = match_lines(
-        ISO_31662_CATEGORIES_DATA_FILE,
+        FILE_SOURCE_31662_CATEGORIES,
         "(?m)^\".*\",\".*\",\".*\",\"([0-9]+)\",\"en\",\".*\",\"(.*)\",\".*\"",
         vec!["id", "text"]
     );
@@ -61,7 +65,7 @@ fn update_31662() {
 }
 
 fn update_31662_data_file(data: HashMap<&str, Vec<String>>, categories: HashMap<&str, Vec<String>>, names: HashMap<String, String>) {
-    println!("Updating {}", ISO_31662_SUBDIVISION_RUST_FILE);
+    println!("Updating {}", FILE_RUST_DATA_31662_SUBDIVISION);
 
     let mut data_strings: Vec<String> = vec![];
     for (index, alpha2) in data.get("alpha2").unwrap().iter().enumerate() {
@@ -87,13 +91,13 @@ fn update_31662_data_file(data: HashMap<&str, Vec<String>>, categories: HashMap<
     }
 
     replace_file_content(
-        ISO_31662_SUBDIVISION_RUST_FILE, 
+        FILE_RUST_DATA_31662_SUBDIVISION, 
         r"(?ms).*?// DATA START\n(.*)\s+// DATA END.*", 
         format!("{}\n   ", data_strings.join("\n")).as_str()
     );
 
     replace_file_content(
-        ISO_31662_SUBDIVISION_RUST_FILE, 
+        FILE_RUST_DATA_31662_SUBDIVISION, 
         r"(static SUBDIVISIONS:\[Subdivision;[0-9]+\])", 
         format!("static SUBDIVISIONS:[Subdivision;{}]", data_strings.len()).as_str()
     );
@@ -117,7 +121,7 @@ fn fetch_31662_names() -> HashMap<String, String> {
     Searcher::new()
         .search_path(
             &matcher,
-            ISO_31662_NAME_DATA_FILE,
+            FILE_SOURCE_31662_NAMES,
             UTF8(|_, line| {
                 let _ = matcher.captures(line.as_bytes(), &mut captures);
                 let text = &line[captures.get(2).unwrap()];
@@ -139,7 +143,7 @@ fn fetch_31662_names() -> HashMap<String, String> {
 }
 
 fn update_31661_data_file(data: HashMap<&str, Vec<String>>) {
-    println!("Updating {}", ISO_31661_RUST_FILE);
+    println!("Updating {}", FILE_RUST_DATA_31661);
 
     let mut data_strings: Vec<String> = vec![];
     for (index, alpha2) in data.get("alpha2").unwrap().iter().enumerate() {
@@ -154,87 +158,14 @@ fn update_31661_data_file(data: HashMap<&str, Vec<String>>) {
     }
 
     replace_file_content(
-        ISO_31661_RUST_FILE, 
+        FILE_RUST_DATA_31661, 
         r"(?ms).*?// DATA START\n(.*)\s+// DATA END.*", 
         format!("{}\n   ", data_strings.join("\n")).as_str()
     );
 
     replace_file_content(
-        ISO_31661_RUST_FILE, 
+        FILE_RUST_DATA_31661, 
         r"(static COUNTRIES:\[Country;[0-9]+\])", 
         format!("static COUNTRIES:[Country;{}]", data.get("alpha2").unwrap().iter().len()).as_str()
     );
-}
-
-fn update_enum_file(data: &[String], file_path: &str) {
-    println!("Updating {}", file_path);
-
-    let mut enums: Vec<&str> = data.iter()
-        .filter(|v| v.as_str() != "None")
-        .map(|v| v.trim())
-        .collect();
-
-    enums.sort_unstable();
-    enums.dedup();
-
-    let mut codes_enum: String = format!("    {}", enums.join(",\n    "));
-    if file_path == ISO_31661_NUMERIC_FILE {
-        codes_enum = format!("    N{}", enums.join(",\n    N"));
-    }
-
-    replace_file_content(
-        file_path, 
-        r"(?ms).*?// ENUM START\n(.*)\s+// ENUM END.*", 
-        format!("{},\n   ", &codes_enum).as_str()
-    );
-}
-
-fn match_lines<'a>(file_path: &'a str, regex: &'a str, result_map: Vec<&'a str>) -> HashMap<&'a str, Vec<String>> {
-    let matcher = RegexMatcher::new_line_matcher(regex).unwrap();
-    let mut captures = matcher.new_captures().unwrap();
-    let mut matches: HashMap<&str, Vec<String>> = HashMap::new();
-    Searcher::new()
-        .search_path(
-            &matcher,
-            file_path,
-            UTF8(|_, line| {
-                let _ = matcher.captures(line.as_bytes(), &mut captures);
-                for (i, index) in result_map.iter().enumerate() {
-                    let entry = matches.entry(index).or_insert_with(Vec::new);
-                    entry.push(line[captures.get(i + 1).unwrap()].to_string());
-                }
-
-                Ok(true)
-            }),
-        )
-        .unwrap();
-
-    matches
-}
-
-fn replace_file_content(file_path: &str, regex: &str, replacement: &str) {
-    let file: String = fs::read_to_string(file_path).unwrap();
-    let matcher = RegexMatcher::new(regex).expect("Invalid Regex");
-    let mut captures = matcher.new_captures().unwrap();
-
-    let mut new_file: String = String::from("");
-    SearcherBuilder::new()
-        .multi_line(true)
-        .build()
-        .search_slice(
-            &matcher,
-            file.as_bytes(),
-            UTF8(|_, result| {
-                let _ = matcher.captures(result.as_bytes(), &mut captures);
-                new_file = file.replace(
-                    &result[captures.get(1).unwrap()].to_string(),
-                    replacement,
-                );
-
-                Ok(true)
-            }),
-        )
-        .unwrap();
-
-    let _ = fs::write(file_path, new_file);
 }

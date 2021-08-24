@@ -1,4 +1,4 @@
-use crate::{FindFor, TryFor};
+use static_traits::{TryFor, FindFor};
 use crate::continent::Continent;
 
 use super::Alpha2;

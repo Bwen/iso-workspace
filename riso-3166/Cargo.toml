@@ -7,21 +7,25 @@ edition = "2018"
 #serde = { version = "1.0", features = ["derive"] }
 #serde_json = "1.0"
 
-# ureq = { version = "2.1", features = ["json", "charset"], optional = true }
+static-traits =  { path = "../static-traits" }
+riso-639 =  { path = "../riso-639", optional = true }
+ureq = { version = "2.1", features = ["json", "charset"], optional = true }
+workspace-utils =  { path = "../workspace-utils", optional = true }
 grep-regex = { version = "0.1", optional = true }
 grep-searcher = { version = "0.1", optional = true }
 grep-matcher = { version = "0.1", optional = true }
 
 [features]
 default = []
-country_details = []
+country_details = ["riso-639"]
 subdivisions = []
 subdivision_details = []
 updater = [
+    "workspace-utils",
     "grep-regex",
     "grep-searcher",
     "grep-matcher",
-    #"ureq"
+    "ureq",
 ]
 
 [[bin]]

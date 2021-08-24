@@ -1,4 +1,4 @@
-use crate::{TryFor, FindFor};
+use static_traits::{TryFor, FindFor};
 
 mod alpha2;
 pub use alpha2::Alpha2;
@@ -30,6 +30,9 @@ pub use tld::Tld;
 #[cfg(feature = "country_details")]
 use crate::continent::Continent;
 
+#[cfg(feature = "country_details")]
+use riso_639::Language;
+
 #[derive(Debug, Eq, PartialEq)]
 pub struct Country {
     pub alpha2: Alpha2,
@@ -40,19 +43,19 @@ pub struct Country {
 }
 
 impl FindFor<Alpha2> for Country {
-    fn find_for(value: Alpha2) -> &'static Country {
+    fn find_for(value: Alpha2) -> &'static Self {
         COUNTRIES.iter().find(|country| country.alpha2 == value).expect("Infallible")
     }
 }
 
 impl FindFor<Alpha3> for Country {
-    fn find_for(value: Alpha3) -> &'static Country {
+    fn find_for(value: Alpha3) -> &'static Self {
         COUNTRIES.iter().find(|country| country.alpha3 == value).expect("Infallible")
     }
 }
 
 impl FindFor<Numeric> for Country {
-    fn find_for(value: Numeric) -> &'static Country {
+    fn find_for(value: Numeric) -> &'static Self {
         COUNTRIES.iter().find(|country| country.numeric == value).expect("Infallible")
     }
 }
@@ -109,7 +112,7 @@ impl TryFor<&str> for Country {
 }
 
 impl Country {
-    pub fn all() -> std::slice::Iter<'static, Country> {
+    pub fn all() -> std::slice::Iter<'static, Self> {
         COUNTRIES.iter()
     }
 
@@ -126,6 +129,22 @@ impl Country {
     pub fn neightboors(&self) -> Vec<&'static Self> {
         let alpha2s: Vec<&str> = self.details().neightboors.split(',').collect();
         COUNTRIES.iter().filter(|country| alpha2s.contains(&format!("{:?}", country.alpha2).as_str())).collect()
+    }
+
+    #[cfg(feature = "country_details")]
+    pub fn languages(&self) -> Vec<&'static Language> {
+        let lang_codes: Vec<String> = self.details().languages.split(',')
+            .map(|lang| lang.find('-').map(|idx| &lang[..idx]).unwrap_or(lang).trim().to_ascii_uppercase()).collect();
+
+        let mut languages:Vec<&Language> = vec![];
+        for lang_code in lang_codes {
+            let lang = Language::try_for(lang_code.as_str());
+            if lang.is_ok() {
+                languages.push(lang.expect("Infallible"));
+            }
+        }
+
+        languages
     }
 
     #[cfg(feature = "country_details")]

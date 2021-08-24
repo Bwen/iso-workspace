@@ -1,5 +1,5 @@
 use crate::country::Alpha2;
-use crate::{FindFor, IterFor};
+use static_traits::{TryFor, FindFor};
 
 mod code;
 pub use code::Code;

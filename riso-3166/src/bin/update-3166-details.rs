@@ -2,23 +2,39 @@ use grep_regex::RegexMatcher;
 use grep_searcher::sinks::UTF8;
 use grep_searcher::{Searcher, SearcherBuilder};
 use grep_matcher::{Captures, Matcher};
-// use ureq;
-use std::fs;
+use workspace_utils::{replace_file_content, update_enum_file};
 
-const ISO_COUNTRY_DATA_FILE: &str = "raw_data/countryInfo.txt";
-const ISO_TLD_FILE: &str = "src/country/tld.rs";
-const ISO_DETAILS_RUST_FILE: &str = "src/country/data_details.rs";
+use ureq;
+use std::fs;
+use std::path::Path;
+
+const URL_SOURCE: &str = "https://download.geonames.org/export/dump/countryInfo.txt";
+const FILE_SOURCE_DETAILS: &str = "raw_data/country-details.csv";
+const FILE_RUST_TLD: &str = "src/country/tld.rs";
+const FILE_RUST_DATA_DETAILS: &str = "src/country/data_details.rs";
 
 use riso_3166::country::Alpha2;
 
 fn main() {
+    download_data_source();
     update_country_details();
+}
+
+fn download_data_source() -> Result<(), ureq::Error> {
+    if Path::new(FILE_SOURCE_DETAILS).exists() {
+        return Ok(());
+    }
+
+    let content = ureq::get(URL_SOURCE).call()?.into_string()?;
+    let _ = fs::write(FILE_SOURCE_DETAILS, content);
+
+    Ok(())
 }
 
 fn update_country_details() {
     let details = fetch_country_details();
 
-    update_enum_file(details[3].clone(), ISO_TLD_FILE);
+    update_enum_file(&details[3].clone(), FILE_RUST_TLD);
     update_country_details_data_file(details);
 }
 
@@ -31,7 +47,7 @@ fn fetch_country_details() -> Vec<Vec<String>> {
     Searcher::new()
         .search_path(
             &matcher,
-            ISO_COUNTRY_DATA_FILE,
+            FILE_SOURCE_DETAILS,
             UTF8(|_, line| {
                 let _ = matcher.captures(line.as_bytes(), &mut captures);
 
@@ -71,7 +87,7 @@ fn fetch_country_details() -> Vec<Vec<String>> {
 }
 
 fn update_country_details_data_file(data: Vec<Vec<String>>) {
-    println!("Updating {}", ISO_DETAILS_RUST_FILE);
+    println!("Updating {}", FILE_RUST_DATA_DETAILS);
     
     let mut data_strings: Vec<String> = vec![];
     for (index, line) in data[0].iter().enumerate() {
@@ -110,60 +126,14 @@ fn update_country_details_data_file(data: Vec<Vec<String>>) {
     }
 
     replace_file_content(
-        ISO_DETAILS_RUST_FILE, 
+        FILE_RUST_DATA_DETAILS, 
         r"(?ms).*?// DATA START\n(.*)\s+// DATA END.*", 
         format!("{}\n   ", data_strings.join("\n")).as_str()
     );
 
     replace_file_content(
-        ISO_DETAILS_RUST_FILE, 
+        FILE_RUST_DATA_DETAILS, 
         r"(static DETAILS:\[Detail;[0-9]+\])", 
         format!("static DETAILS:[Detail;{}]", data[0].iter().len()).as_str()
     );
-}
-
-fn update_enum_file(data: Vec<String>, file_path: &str) {
-    println!("Updating {}", file_path);
-
-    let mut enums: Vec<&str> = data.iter()
-        .filter(|v| v.as_str() != "None")
-        .map(|v| v.trim())
-        .collect();
-
-    enums.sort_unstable();
-    enums.dedup();
-
-    let codes_enum: String = format!("    {}", enums.join(",\n    "));
-    replace_file_content(
-        file_path, 
-        r"(?ms).*?// ENUM START\n(.*)\s+// ENUM END.*", 
-        format!("{},\n   ", &codes_enum).as_str()
-    );
-}
-
-fn replace_file_content(file_path: &str, regex: &str, replacement: &str) {
-    let file: String = fs::read_to_string(file_path).unwrap();
-    let matcher = RegexMatcher::new(regex).expect("Invalid Regex");
-    let mut captures = matcher.new_captures().unwrap();
-
-    let mut new_file: String = String::from("");
-    SearcherBuilder::new()
-        .multi_line(true)
-        .build()
-        .search_slice(
-            &matcher,
-            file.as_bytes(),
-            UTF8(|_, result| {
-                let _ = matcher.captures(result.as_bytes(), &mut captures);
-                new_file = file.replace(
-                    &result[captures.get(1).unwrap()].to_string(),
-                    replacement,
-                );
-
-                Ok(true)
-            }),
-        )
-        .unwrap();
-
-    let _ = fs::write(file_path, new_file);
 }

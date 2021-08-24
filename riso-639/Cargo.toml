@@ -3,6 +3,22 @@ name = "riso-639"
 version = "0.1.0"
 edition = "2018"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
+#serde = { version = "1.0", features = ["derive"] }
+#serde_json = "1.0"
+
+static-traits =  { path = "../static-traits" }
+workspace-utils =  { path = "../workspace-utils", optional = true }
+ureq = { version = "2.1", features = ["json", "charset"], optional = true }
+
+[features]
+default = []
+updater = [
+    "workspace-utils",
+    "ureq",
+]
+
+[[bin]]
+name = "update-639"
+path = "src/bin/update-639.rs"
+required-features = ["updater"]

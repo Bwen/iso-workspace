@@ -1,7 +1,5 @@
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-        assert_eq!(2 + 2, 4);
-    }
-}
+
+mod language;
+pub use language::Language;
+pub use language::Alpha2;
+pub use language::Alpha3;
