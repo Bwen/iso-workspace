@@ -1,11 +1,10 @@
 use grep_regex::RegexMatcher;
 use grep_searcher::sinks::UTF8;
-use grep_searcher::{Searcher, SearcherBuilder};
+use grep_searcher::{Searcher};
 use grep_matcher::{Captures, Matcher};
 use workspace_utils::{match_lines, replace_file_content, update_enum_file};
 
 // use ureq;
-use std::fs;
 use std::collections::HashMap;
 
 const FILE_SOURCE_31661: &str = "raw_data/country-codes.csv";
@@ -32,11 +31,30 @@ fn update_31661() {
         vec!["alpha2", "alpha3", "numeric", "name", "name_full"]
     );
 
-    let numerics: Vec<String> = data.get("numeric").unwrap().iter().map(|n| format!("N{}", n)).collect();
+    let alpha2s = &data.get("alpha2").unwrap();
+    update_enum_file(alpha2s, FILE_RUST_31661_ALPHA2);
+    replace_file_content(
+        FILE_RUST_31661_ALPHA2, 
+        r"(?ms).*?pub fn count\(\) -> usize \{\n\s+(return .*?;)\n\s+\}", 
+        format!("return {};", alpha2s.len()).as_str()
+    );
 
-    update_enum_file(&data.get("alpha2").unwrap().clone(), FILE_RUST_31661_ALPHA2);
-    update_enum_file(&data.get("alpha3").unwrap().clone(), FILE_RUST_31661_ALPHA3);
+    let alpha3s = &data.get("alpha3").unwrap();
+    update_enum_file(alpha3s, FILE_RUST_31661_ALPHA3);
+    replace_file_content(
+        FILE_RUST_31661_ALPHA3, 
+        r"(?ms).*?pub fn count\(\) -> usize \{\n\s+(return .*?;)\n\s+\}", 
+        format!("return {};", alpha3s.len()).as_str()
+    );
+
+    let numerics: Vec<String> = data.get("numeric").unwrap().iter().map(|n| format!("N{}", n)).collect();
     update_enum_file(&numerics, FILE_RUST_31661_NUMERIC);
+    replace_file_content(
+        FILE_RUST_31661_NUMERIC, 
+        r"(?ms).*?pub fn count\(\) -> usize \{\n\s+(return .*?;)\n\s+\}", 
+        format!("return {};", numerics.len()).as_str()
+    );
+
     update_31661_data_file(data);
 }
 

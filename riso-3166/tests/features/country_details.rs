@@ -1,13 +1,9 @@
-mod details {
+mod country_details {
     extern crate riso_3166;
     use static_traits::{TryFor, FindFor};
     use riso_3166::country::{Country, Detail, Alpha2, Tld};
     use riso_3166::continent::Code;
-    use riso_639::{
-        Alpha2 as LangAlpha2, 
-        Alpha3 as LangAlpha3
-    };
-    
+
     #[test]
     fn find_for() {
         let detail = Detail::find_for(Alpha2::CA);
@@ -51,15 +47,5 @@ mod details {
         let country = Country::find_for(Alpha2::CA);
         let languages = country.languages();
         assert_eq!(3, languages.len());
-
-        let langAlpha2s: Vec<&LangAlpha2> = languages.iter().map(|n| &n.alpha2).collect();
-        assert!(langAlpha2s.contains(&&LangAlpha2::EN));
-        assert!(langAlpha2s.contains(&&LangAlpha2::FR));
-        assert!(langAlpha2s.contains(&&LangAlpha2::IU));
-
-        let langAlpha3s: Vec<&LangAlpha3> = languages.iter().map(|n| &n.alpha3).collect();
-        assert!(langAlpha3s.contains(&&LangAlpha3::ENG));
-        assert!(langAlpha3s.contains(&&LangAlpha3::FRE));
-        assert!(langAlpha3s.contains(&&LangAlpha3::IKU));
     }
 }

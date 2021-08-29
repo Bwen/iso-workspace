@@ -30,9 +30,6 @@ pub use tld::Tld;
 #[cfg(feature = "country_details")]
 use crate::continent::Continent;
 
-#[cfg(feature = "country_details")]
-use riso_639::Language;
-
 #[derive(Debug, Eq, PartialEq)]
 pub struct Country {
     pub alpha2: Alpha2,
@@ -132,22 +129,6 @@ impl Country {
     }
 
     #[cfg(feature = "country_details")]
-    pub fn languages(&self) -> Vec<&'static Language> {
-        let lang_codes: Vec<String> = self.details().languages.split(',')
-            .map(|lang| lang.find('-').map(|idx| &lang[..idx]).unwrap_or(lang).trim().to_ascii_uppercase()).collect();
-
-        let mut languages:Vec<&Language> = vec![];
-        for lang_code in lang_codes {
-            let lang = Language::try_for(lang_code.as_str());
-            if lang.is_ok() {
-                languages.push(lang.expect("Infallible"));
-            }
-        }
-
-        languages
-    }
-
-    #[cfg(feature = "country_details")]
     pub fn iter_for_population_greater(amount: usize) -> Vec<&'static Self> {
         let alpha2s: Vec<&Alpha2> = DETAILS.iter().filter(|detail| detail.population > amount).map(|c| &c.alpha2).collect();
         COUNTRIES.iter().filter(|country| alpha2s.contains(&&country.alpha2)).collect()
@@ -157,4 +138,14 @@ impl Country {
     pub fn details(&self) -> &'static Detail {
         DETAILS.iter().find(|detail| detail.alpha2 == self.alpha2).expect("Infallible")
     }
+
+    #[cfg(feature = "country_details")]
+    pub fn languages(&self) -> Vec<String> {
+        self.details()
+            .languages
+            .split(',')
+            .map(|code| code.to_string())
+            .collect::<Vec<String>>()
+    }
+
 }

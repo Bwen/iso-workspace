@@ -1,10 +1,9 @@
 use grep_regex::RegexMatcher;
 use grep_searcher::sinks::UTF8;
-use grep_searcher::{Searcher, SearcherBuilder};
+use grep_searcher::{Searcher};
 use grep_matcher::{Captures, Matcher};
 use workspace_utils::{replace_file_content, update_enum_file};
 
-use ureq;
 use std::fs;
 use std::path::Path;
 
@@ -16,7 +15,7 @@ const FILE_RUST_DATA_DETAILS: &str = "src/country/data_details.rs";
 use riso_3166::country::Alpha2;
 
 fn main() {
-    download_data_source();
+    let _ = download_data_source();
     update_country_details();
 }
 

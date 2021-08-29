@@ -259,20 +259,6 @@ pub enum Numeric {
     // ENUM END
 }
 
-//impl TryFrom<usize> for Numeric {
-//    type Error = &'static str;
-//
-//    fn try_from(value: usize) -> Result<Self, Self::Error> {
-//        let number = format!("N{:0>3}", value);
-//        let numeric = Numeric::from_str(number.as_str());
-//        if numeric.is_ok() {
-//            return Ok(numeric.unwrap());
-//        }
-
-//        Err("Could not find Numeric for the supplied usize")
-//    }
-//}
-
 impl fmt::Display for Numeric {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let numeric = format!("{:?}", self);
@@ -287,5 +273,9 @@ impl Numeric {
         trans_map.insert(530_usize, 528_usize);
 
         trans_map
+    }
+
+    pub fn count() -> usize {
+        return 249;
     }
 }

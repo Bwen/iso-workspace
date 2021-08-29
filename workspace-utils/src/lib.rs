@@ -9,7 +9,7 @@ pub fn update_enum_file(data: &[String], file_path: &str) {
     println!("Updating {}", file_path);
 
     let mut enums: Vec<String> = data.iter()
-        .filter(|v| v.as_str() != "None" && !v.is_empty())
+        .filter(|v| v.as_str() != "None" && !v.is_empty() && v.len() != 1)
         .map(|v| v.to_ascii_uppercase())
         .collect();
 

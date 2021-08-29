@@ -2,7 +2,7 @@ mod subdivisions {
     extern crate riso_3166;
     use riso_3166::country::Alpha2;
     use riso_3166::subdivision::{Subdivision, Code};
-    use riso_3166::{FindFor, IterFor};
+    use static_traits::{FindFor, IterFor};
     
     //#[test]
     //fn sanity_checks() {

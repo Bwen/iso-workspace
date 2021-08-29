@@ -1,13 +1,18 @@
 [package]
-name = "riso-3166"
+name = "riso-4217"
 version = "0.1.0"
 edition = "2018"
 
 [dependencies]
-#serde = { version = "1.0", features = ["derive"] }
-#serde_json = "1.0"
 
+serde = "1.0"
+
+riso-3166 = { path = "../riso-3166" }
 static-traits =  { path = "../static-traits" }
+
+scraper = { version = "0.12", optional = true }
+serde_derive = { version = "1.0", optional = true }
+serde-xml-rs = { version = "0.5", optional = true }
 ureq = { version = "2.1", features = ["json", "charset"], optional = true }
 workspace-utils =  { path = "../workspace-utils", optional = true }
 grep-regex = { version = "0.1", optional = true }
@@ -16,24 +21,18 @@ grep-matcher = { version = "0.1", optional = true }
 
 [features]
 default = []
-country_currencies = []
-country_details = []
-subdivisions = []
-subdivision_details = []
 updater = [
     "workspace-utils",
     "grep-regex",
     "grep-searcher",
     "grep-matcher",
     "ureq",
+    "serde-xml-rs",
+    "serde_derive",
+    "scraper",
 ]
 
 [[bin]]
-name = "update-3166"
-path = "src/bin/update-3166.rs"
-required-features = ["updater"]
-
-[[bin]]
-name = "update-3166-details"
-path = "src/bin/update-3166-details.rs"
+name = "update-4217"
+path = "src/bin/update-4217.rs"
 required-features = ["updater"]

@@ -3,12 +3,12 @@ use riso_3166::country::{Country, Numeric, Alpha2, Alpha3};
 use static_traits::{TryFor, FindFor};
 
 #[test]
-//fn sanity_checks() {
-//    let total = Country::count();
-//    assert_eq!(Alpha2::iter().count(), total);
-//    assert_eq!(Alpha3::iter().count(), total);
-//    assert_eq!(Numeric::iter().count(), total);
-//}
+fn sanity_checks() {
+    let total = Country::count();
+    assert_eq!(Alpha2::count(), total);
+    assert_eq!(Alpha3::count(), total);
+    assert_eq!(Numeric::count(), total);
+}
 
 #[test]
 fn country_from() {

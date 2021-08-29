@@ -1,4 +1,3 @@
-use ureq;
 use std::collections::HashMap;
 use std::fs;
 use std::path::Path;
@@ -11,7 +10,7 @@ const FILE_RUST_ALPHA3: &str = "src/language/alpha3.rs";
 const FILE_RUST_DATA_LANGUAGES: &str = "src/language/data.rs";
 
 fn main() {
-    download_data_source();
+    let _ = download_data_source();
 
     let data: HashMap<&str, Vec<String>> = match_lines(
         FILE_DATA_LANGUAGES,

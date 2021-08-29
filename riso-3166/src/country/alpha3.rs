@@ -273,4 +273,8 @@ impl Alpha3 {
 
         trans_map
     }
+
+    pub fn count() -> usize {
+        return 249;
+    }
 }
