@@ -1,5 +1,5 @@
 use crate::country::Alpha2;
-use static_traits::{IterFor, FindFor};
+use riso_static_traits::{IterFor, FindFor};
 
 mod code;
 pub use code::Code;

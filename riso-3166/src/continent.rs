@@ -1,5 +1,5 @@
 use std::fmt;
-use static_traits::{TryFor, FindFor};
+use riso_static_traits::{TryFor, FindFor};
 
 mod data;
 use data::CONTINENTS;

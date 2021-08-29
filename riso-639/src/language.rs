@@ -1,4 +1,9 @@
-use static_traits::{IterFor, TryFor, FindFor};
+use serde::{Deserialize, Deserializer};
+use serde::ser::{Serialize, Serializer, SerializeStruct};
+use riso_static_traits::{TryFor, FindFor};
+
+#[cfg(feature = "country_details")]
+use riso_static_traits::IterFor;
 
 #[cfg(feature = "country_details")]
 use riso_3166::country::Country;
@@ -12,7 +17,7 @@ pub use alpha3::Alpha3;
 mod data;
 use data::LANGUAGES;
 
-#[derive(Debug, Eq, PartialEq)]
+#[derive(Debug, Eq, PartialEq, Copy, Clone)]
 pub struct Language {
     pub alpha2: Alpha2,
     pub alpha3: Alpha3,
@@ -66,5 +71,33 @@ impl IterFor<&Country> for Language {
             .collect();
 
         LANGUAGES.iter().filter(|language| lang_codes.contains(&language.alpha2.to_string())).collect()
+    }
+}
+
+impl<'de> Deserialize<'de> for Language {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where D: Deserializer<'de> {
+        use serde::de::Error;
+
+        let string = String::deserialize(deserializer)?;
+        let result = Language::try_for(string.as_str());
+        if let Ok(language) = result {
+            return Ok(language.clone());
+        }
+        
+        Err(D::Error::custom("Unexpected element"))?
+    }
+}
+
+impl Serialize for Language {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let mut state = serializer.serialize_struct("Language", 3)?;
+        state.serialize_field("alpha2", &self.alpha2)?;
+        state.serialize_field("alpha3", &self.alpha3)?;
+        state.serialize_field("text", &self.text)?;
+        state.end()
     }
 }

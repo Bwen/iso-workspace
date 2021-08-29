@@ -1,4 +1,4 @@
-use static_traits::{TryFor, FindFor};
+use riso_static_traits::{TryFor, FindFor};
 use crate::continent::Continent;
 
 use super::Alpha2;

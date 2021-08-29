@@ -1,6 +1,6 @@
 
 extern crate riso_639;
-use static_traits::{IterFor, TryFor, FindFor};
+use riso_static_traits::{TryFor, FindFor};
 use riso_639::{Language, Alpha2, Alpha3};
 
 #[test]

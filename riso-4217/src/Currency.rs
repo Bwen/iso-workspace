@@ -1,4 +1,7 @@
-use static_traits::{TryFor, FindFor, IterFor};
+use serde::{Deserialize, Deserializer};
+use serde::ser::{Serialize, Serializer, SerializeStruct};
+
+use riso_static_traits::{TryFor, FindFor, IterFor};
 use riso_3166::country::{Country, Alpha2};
 
 mod code;
@@ -10,7 +13,7 @@ pub use numeric::Numeric;
 mod data;
 use data::CURRENCIES;
 
-#[derive(Debug, Eq, PartialEq)]
+#[derive(Debug, Eq, PartialEq, Copy, Clone)]
 pub struct Currency {
     pub code: Code,
     pub numeric: Numeric,
@@ -74,6 +77,12 @@ impl TryFor<&str> for Currency {
     }
 }
 
+impl IterFor<&Country> for Currency {
+    fn iter_for(value: &Country) -> Vec<&'static Self> {
+        CURRENCIES.iter().filter(|currency| currency.countries.contains(&value.alpha2.to_string())).collect()
+    }
+}
+
 impl IterFor<Alpha2> for Currency {
     fn iter_for(value: Alpha2) -> Vec<&'static Self> {
         CURRENCIES.iter().filter(|currency| currency.countries.contains(&value.to_string())).collect()
@@ -92,5 +101,35 @@ impl Currency {
         }
 
         countries
+    }
+}
+
+impl<'de> Deserialize<'de> for Currency {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where D: Deserializer<'de> {
+        use serde::de::Error;
+
+        let string = String::deserialize(deserializer)?;
+        let result = Currency::try_for(string.as_str());
+        if let Ok(currency) = result {
+            return Ok(currency.clone());
+        }
+        
+        Err(D::Error::custom("Unexpected element"))?
+    }
+}
+
+impl Serialize for Currency {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let mut state = serializer.serialize_struct("Currency", 6)?;
+        state.serialize_field("code", &self.code)?;
+        state.serialize_field("numeric", &self.numeric)?;
+        state.serialize_field("units", &self.units)?;
+        state.serialize_field("symbol", &self.symbol)?;
+        state.serialize_field("countries", &self.countries)?;
+        state.end()
     }
 }

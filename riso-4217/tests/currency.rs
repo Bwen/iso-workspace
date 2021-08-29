@@ -1,7 +1,7 @@
 extern crate riso_4217;
 use riso_4217::{Currency, Numeric, Code};
 use riso_3166::country::{Country, Alpha2};
-use static_traits::{TryFor, FindFor, IterFor};
+use riso_static_traits::{TryFor, FindFor, IterFor};
 
 #[test]
 fn try_for() {
@@ -77,6 +77,12 @@ fn find_for() {
 
 #[test]
 fn iter_for() {
+    let country = Country::find_for(Alpha2::US);
+    let currencies = Currency::iter_for(country);
+    assert_eq!(currencies.len(), 2);
+    assert!(currencies.iter().any(|c| c.code == Code::USD));
+    assert!(currencies.iter().any(|c| c.code == Code::USN));
+
     let currencies = Currency::iter_for(Alpha2::US);
     assert_eq!(currencies.len(), 2);
     assert!(currencies.iter().any(|c| c.code == Code::USD));

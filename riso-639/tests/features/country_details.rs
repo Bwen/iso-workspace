@@ -1,7 +1,7 @@
 mod country_details {
     extern crate riso_3166;
     extern crate riso_639;
-    use static_traits::{IterFor, TryFor, FindFor};
+    use riso_static_traits::{IterFor, TryFor, FindFor};
     use riso_3166::country::Country;
     use riso_3166::country::Alpha2 as CountryAlpha2;
     use riso_639::{Language, Alpha2};

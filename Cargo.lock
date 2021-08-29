@@ -564,7 +564,9 @@ dependencies = [
  "grep-matcher",
  "grep-regex",
  "grep-searcher",
- "static-traits",
+ "riso-static-traits",
+ "serde",
+ "serde_json",
  "ureq",
  "workspace-utils",
 ]
@@ -577,11 +579,12 @@ dependencies = [
  "grep-regex",
  "grep-searcher",
  "riso-3166",
+ "riso-static-traits",
  "scraper",
  "serde",
  "serde-xml-rs",
  "serde_derive",
- "static-traits",
+ "serde_json",
  "ureq",
  "workspace-utils",
 ]
@@ -591,10 +594,16 @@ name = "riso-639"
 version = "0.1.0"
 dependencies = [
  "riso-3166",
- "static-traits",
+ "riso-static-traits",
+ "serde",
+ "serde_json",
  "ureq",
  "workspace-utils",
 ]
+
+[[package]]
+name = "riso-static-traits"
+version = "0.1.0"
 
 [[package]]
 name = "rustc_version"
@@ -693,6 +702,9 @@ name = "serde"
 version = "1.0.129"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d1f72836d2aa753853178eda473a3b9d8e4eefdaf20523b919677e6de489f8f1"
+dependencies = [
+ "serde_derive",
+]
 
 [[package]]
 name = "serde-xml-rs"
@@ -761,10 +773,6 @@ name = "stable_deref_trait"
 version = "1.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a8f112729512f8e442d81f95a8a7ddf2b7c6b8a1a6f509a95864142b30cab2d3"
-
-[[package]]
-name = "static-traits"
-version = "0.1.0"
 
 [[package]]
 name = "string_cache"

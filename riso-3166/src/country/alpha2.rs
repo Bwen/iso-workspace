@@ -1,10 +1,8 @@
 use std::fmt;
 use std::collections::HashMap;
+use serde::ser::{Serialize, Serializer};
 
-//use serde::{Serialize, Deserialize};
-//#[derive(Serialize, Deserialize)]
-
-#[derive(Debug, Eq, PartialEq)]
+#[derive(Debug, Eq, PartialEq, Copy, Clone)]
 pub enum Alpha2 {
     // ENUM START
     AD,
@@ -287,5 +285,14 @@ impl Alpha2 {
 
     pub fn count() -> usize {
         return 249;
+    }
+}
+
+impl Serialize for Alpha2 {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        serializer.serialize_str(format!("{}", self).as_str())
     }
 }

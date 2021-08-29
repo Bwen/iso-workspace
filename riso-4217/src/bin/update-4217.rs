@@ -1,4 +1,4 @@
-use static_traits::TryFor;
+use riso_static_traits::TryFor;
 
 use std::collections::HashMap;
 use std::fs;

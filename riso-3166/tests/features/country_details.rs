@@ -1,6 +1,6 @@
 mod country_details {
     extern crate riso_3166;
-    use static_traits::{TryFor, FindFor};
+    use riso_static_traits::{TryFor, FindFor};
     use riso_3166::country::{Country, Detail, Alpha2, Tld};
     use riso_3166::continent::Code;
 

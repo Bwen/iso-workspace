@@ -1,8 +1,7 @@
 use std::fmt;
-//use serde::{Serialize, Deserialize};
-//#[derive(Serialize, Deserialize)]
+use serde::ser::{Serialize, Serializer};
 
-#[derive(Debug, Eq, PartialEq)]
+#[derive(Debug, Eq, PartialEq, Copy, Clone)]
 pub enum Alpha3 {
     // ENUM START
     AAR,
@@ -497,5 +496,14 @@ pub enum Alpha3 {
 impl fmt::Display for Alpha3 {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{:?}", self)
+    }
+}
+
+impl Serialize for Alpha3 {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        serializer.serialize_str(format!("{}", self).as_str())
     }
 }

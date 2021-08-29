@@ -1,4 +1,6 @@
-use static_traits::{TryFor, FindFor};
+use serde::{Deserialize, Deserializer};
+use serde::ser::{Serialize, Serializer, SerializeStruct};
+use riso_static_traits::{TryFor, FindFor};
 
 mod alpha2;
 pub use alpha2::Alpha2;
@@ -30,7 +32,7 @@ pub use tld::Tld;
 #[cfg(feature = "country_details")]
 use crate::continent::Continent;
 
-#[derive(Debug, Eq, PartialEq)]
+#[derive(Debug, Eq, PartialEq, Copy, Clone)]
 pub struct Country {
     pub alpha2: Alpha2,
     pub alpha3: Alpha3,
@@ -148,4 +150,34 @@ impl Country {
             .collect::<Vec<String>>()
     }
 
+}
+
+impl<'de> Deserialize<'de> for Country {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where D: Deserializer<'de> {
+        use serde::de::Error;
+
+        let string = String::deserialize(deserializer)?;
+        let result = Country::try_for(string.as_str());
+        if let Ok(country) = result {
+            return Ok(country.clone());
+        }
+        
+        Err(D::Error::custom("Unexpected element"))?
+    }
+}
+
+impl Serialize for Country {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let mut state = serializer.serialize_struct("Country", 5)?;
+        state.serialize_field("alpha2", &self.alpha2)?;
+        state.serialize_field("alpha3", &self.alpha3)?;
+        state.serialize_field("numeric", &self.numeric)?;
+        state.serialize_field("name", &self.name)?;
+        state.serialize_field("official_name", &self.official_name)?;
+        state.end()
+    }
 }

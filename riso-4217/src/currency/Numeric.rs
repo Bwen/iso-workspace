@@ -1,9 +1,7 @@
 use std::fmt;
+use serde::ser::{Serialize, Serializer};
 
-//use serde::{Serialize, Deserialize};
-//#[derive(Serialize, Deserialize)]
-
-#[derive(Debug, Eq, PartialEq)]
+#[derive(Debug, Eq, PartialEq, Copy, Clone)]
 pub enum Numeric {
     None,
     // ENUM START
@@ -199,5 +197,14 @@ impl fmt::Display for Numeric {
 impl Numeric {
     pub fn is_none(&self) -> bool {
         matches!(*self, Numeric::None)
+    }
+}
+
+impl Serialize for Numeric {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        serializer.serialize_str(format!("{}", self).as_str())
     }
 }
