@@ -11,6 +11,14 @@ fn sanity_checks() {
 }
 
 #[test]
+fn country_flags() {
+    let countries = Country::all();
+    for country in countries {
+        assert!(!country.unicode_flag().is_empty());
+    }
+}
+
+#[test]
 fn country_from() {
     let country = Country::find_for(Alpha2::PH);
     assert_eq!(country.name, "Philippines (the)");

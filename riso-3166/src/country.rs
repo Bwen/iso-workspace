@@ -150,7 +150,18 @@ impl Country {
             .collect::<Vec<String>>()
     }
 
+    pub fn unicode_flag(&self) -> String {
+        let mut flag = String::new();
+        for c in format!("{}", self.alpha2).chars() {
+            if let Some(c) = std::char::from_u32(c as u32 + 127397) {
+                flag.push(c);
+            }
+        }
+
+        flag
+    }
 }
+
 
 impl<'de> Deserialize<'de> for Country {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>

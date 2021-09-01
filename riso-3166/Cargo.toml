@@ -21,7 +21,6 @@ default = []
 country_currencies = []
 country_details = []
 subdivisions = []
-subdivision_details = []
 updater = [
     "workspace-utils",
     "grep-regex",
