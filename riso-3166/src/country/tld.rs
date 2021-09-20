@@ -1,6 +1,7 @@
 use std::fmt;
+use serde::ser::{Serialize, Serializer};
 
-#[derive(Debug, Eq, PartialEq)]
+#[derive(Debug, Eq, PartialEq, Copy, Clone)]
 pub enum Tld {
     None,
     // ENUM START
@@ -263,5 +264,14 @@ impl fmt::Display for Tld {
 impl Tld {
     pub fn is_none(&self) -> bool {
         matches!(*self, Tld::None)
+    }
+}
+
+impl Serialize for Tld {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        serializer.serialize_str(format!(".{}", self).as_str())
     }
 }

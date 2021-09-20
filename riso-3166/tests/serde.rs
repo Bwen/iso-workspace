@@ -49,7 +49,7 @@ fn serde_serialize() -> Result<()> {
     };
 
     let test: String = serde_json::to_string(&test_serialize).unwrap();
-    assert_eq!(test, "{\"text\":\"test\",\"country\":{\"alpha2\":\"US\",\"alpha3\":\"USA\",\"numeric\":\"840\",\"name\":\"United States of America (the)\",\"official_name\":\"the United States of America\"},\"numeric\":\"104\",\"alpha2\":\"US\",\"alpha3\":\"USA\"}");
+    assert_eq!(test, "{\"text\":\"test\",\"country\":{\"alpha2\":\"US\",\"alpha3\":\"USA\",\"numeric\":\"840\",\"name\":\"United States of America (the)\",\"official_name\":\"the United States of America\",\"flag\":\"🇺🇸\"},\"numeric\":\"104\",\"alpha2\":\"US\",\"alpha3\":\"USA\"}");
 
     Ok(())
 }

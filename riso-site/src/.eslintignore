@@ -1,0 +1,6 @@
+/.tmp/
+/config/
+/dist/
+/*.js
+/test/unit/coverage/
+*riso-wasm/pkg/*

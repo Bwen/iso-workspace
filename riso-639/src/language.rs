@@ -56,6 +56,12 @@ impl FindFor<Alpha3> for Language {
     }
 }
 
+impl Language {
+    pub fn all() -> std::slice::Iter<'static, Self> {
+        LANGUAGES.iter()
+    }
+}
+
 #[cfg(feature = "country_details")]
 impl IterFor<&Country> for Language {
     fn iter_for(value: &Country) -> Vec<&'static Self> {

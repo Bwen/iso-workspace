@@ -3,4 +3,5 @@ members = [
     "riso-4217",
     "riso-3166",
     "riso-639",
+    "riso-wasm",
 ]

@@ -162,7 +162,6 @@ impl Country {
     }
 }
 
-
 impl<'de> Deserialize<'de> for Country {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where D: Deserializer<'de> {
@@ -183,12 +182,13 @@ impl Serialize for Country {
     where
         S: Serializer,
     {
-        let mut state = serializer.serialize_struct("Country", 5)?;
+        let mut state = serializer.serialize_struct("Country", 6)?;
         state.serialize_field("alpha2", &self.alpha2)?;
         state.serialize_field("alpha3", &self.alpha3)?;
         state.serialize_field("numeric", &self.numeric)?;
         state.serialize_field("name", &self.name)?;
         state.serialize_field("official_name", &self.official_name)?;
+        state.serialize_field("flag", &self.unicode_flag())?;
         state.end()
     }
 }

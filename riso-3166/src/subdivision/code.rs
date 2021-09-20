@@ -1,9 +1,8 @@
 use std::fmt;
-//use serde::{Serialize, Deserialize};
-//#[derive(Serialize, Deserialize)]
+use serde::ser::{Serialize, Serializer};
 
 #[allow(non_camel_case_types)]
-#[derive(Debug,  Eq, PartialEq)]
+#[derive(Debug,  Eq, PartialEq, Copy, Clone)]
 pub enum Code {
     None,
     // ENUM START
@@ -5143,6 +5142,19 @@ impl fmt::Display for Code {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let code = format!("{:?}", self);
         let code_parts: Vec<&str> = code.split('_').collect();
-        write!(f, "{}", code_parts.join("_"))
+        write!(f, "{}", code_parts.join("-"))
+    }
+}
+
+impl Serialize for Code {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        if self.is_none() {
+            return serializer.serialize_str("");
+        }
+
+        serializer.serialize_str(format!("{}", self).as_str())
     }
 }

@@ -90,6 +90,10 @@ impl IterFor<Alpha2> for Currency {
 }
 
 impl Currency {
+    pub fn all() -> std::slice::Iter<'static, Self> {
+        CURRENCIES.iter()
+    }
+
     pub fn countries(&self) -> Vec<&'static Country> {
         let alpha2s = self.countries.split(',');
         let mut countries: Vec<&Country> = vec![];
@@ -128,6 +132,7 @@ impl Serialize for Currency {
         state.serialize_field("code", &self.code)?;
         state.serialize_field("numeric", &self.numeric)?;
         state.serialize_field("units", &self.units)?;
+        state.serialize_field("name", &self.name)?;
         state.serialize_field("symbol", &self.symbol)?;
         state.serialize_field("countries", &self.countries)?;
         state.end()

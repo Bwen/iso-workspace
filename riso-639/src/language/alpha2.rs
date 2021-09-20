@@ -192,6 +192,12 @@ pub enum Alpha2 {
     // ENUM END
 }
 
+impl Alpha2 {
+    pub fn is_none(&self) -> bool {
+        matches!(*self, Alpha2::None)
+    }
+}
+
 impl fmt::Display for Alpha2 {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{:?}", self)
@@ -203,6 +209,10 @@ impl Serialize for Alpha2 {
     where
         S: Serializer,
     {
+        if self.is_none() {
+            return serializer.serialize_str("");
+        }
+
         serializer.serialize_str(format!("{}", self).as_str())
     }
 }
