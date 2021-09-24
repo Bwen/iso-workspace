@@ -1,0 +1,4 @@
+#!/bin/sh
+
+cargo install cargo-tarpaulin
+cargo tarpaulin --all-features --exclude-files **/bin/* --workspace -o html
