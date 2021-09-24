@@ -51,10 +51,6 @@ impl Detail {
     pub fn continent(&self) -> &'static Continent {
         Continent::try_for(self.continent).expect("Infallible")
     }
-
-    pub fn for_continent(continent: Continent) -> &'static Self {
-        DETAILS.iter().find(|detail| detail.continent.to_string() == continent.code.to_string()).expect("Infallible")
-    }
 }
 
 impl<'de> Deserialize<'de> for Detail {

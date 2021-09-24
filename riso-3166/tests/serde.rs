@@ -36,6 +36,14 @@ fn serde_deserialize() -> Result<()> {
     Ok(())
 }
 
+#[test]
+fn serde_deserialize_error() -> Result<()> {
+    let json = r#"{"text": "test", "country": "USDSF"}"#;
+    let result: Result<Country> = serde_json::from_str(json);
+    assert!(result.is_err());
+
+    Ok(())
+}
 
 #[test]
 fn serde_serialize() -> Result<()> {

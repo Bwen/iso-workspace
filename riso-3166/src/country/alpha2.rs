@@ -278,7 +278,6 @@ impl Alpha2 {
         trans_map.insert("IC", "ES");
         trans_map.insert("EA", "ES");
         trans_map.insert("FX", "FR");
-        trans_map.insert("FX", "FR");
 
         trans_map
     }

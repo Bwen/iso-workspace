@@ -38,7 +38,7 @@ impl IterFor<Code> for Subdivision {
 
 impl TryFor<&str> for Subdivision {
     fn try_for(value: &str) -> Result<&'static Self, &'static str> {
-        if value.len() >= 2 && value.len() < 10 {
+        if value.contains('-') && value[3..].len() >= 1 && value[3..].len() < 4 {
             let result = SUBDIVISIONS.iter().find(|subdivision| subdivision.code.to_string() == value.to_ascii_uppercase());
             if result.is_some() {
                 return Ok(result.expect("Infallible"));

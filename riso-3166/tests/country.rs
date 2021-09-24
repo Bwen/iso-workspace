@@ -11,6 +11,25 @@ fn sanity_checks() {
 }
 
 #[test]
+fn transitional_map_alpha2() {
+    let country = Country::try_for("AN").unwrap();
+    assert_eq!(country.alpha2, Alpha2::NL);
+}
+
+#[test]
+fn transitional_map_alpha3() {
+    let country = Country::try_for("ANT").unwrap();
+    assert_eq!(country.alpha3, Alpha3::NLD);
+}
+
+#[test]
+fn transitional_map_numeric() {
+    let country = Country::try_for("530");
+    assert!(country.is_ok());
+    assert_eq!(country.unwrap().numeric, Numeric::N528);
+}
+
+#[test]
 fn country_flags() {
     let countries = Country::all();
     for country in countries {
@@ -19,7 +38,13 @@ fn country_flags() {
 }
 
 #[test]
-fn country_from() {
+fn country_flag() {
+    let country = Country::try_for("canada").unwrap();
+    assert_eq!(country.unicode_flag(), "🇨🇦");
+}
+
+#[test]
+fn country_find_for() {
     let country = Country::find_for(Alpha2::PH);
     assert_eq!(country.name, "Philippines (the)");
     assert_eq!(country.official_name, "the Republic of the Philippines");
@@ -43,7 +68,7 @@ fn country_from() {
 }
 
 #[test]
-fn country_try_from() {
+fn country_try_for() {
     let country = Country::try_for("canada").unwrap();
     assert_eq!(country.name, "Canada");
     assert_eq!(country.official_name, "");
@@ -78,6 +103,24 @@ fn country_try_from() {
     assert_eq!(country.alpha2, Alpha2::CA);
     assert_eq!(country.alpha3, Alpha3::CAN);
     assert_eq!(country.numeric, Numeric::N124);
+}
+
+#[test]
+fn country_try_for_error() {
+    let country: Result<&Country, &str> = Country::try_for("canada2");
+    assert!(country.is_err());
+
+    let country: Result<&Country, &str> = Country::try_for("zz");
+    assert!(country.is_err());
+
+    let country: Result<&Country, &str> = Country::try_for("zzz");
+    assert!(country.is_err());
+
+    let country: Result<&Country, &str> = Country::try_for("99");
+    assert!(country.is_err());
+
+    let country: Result<&Country, &str> = Country::try_for(999 as usize);
+    assert!(country.is_err());
 }
 
 #[test]

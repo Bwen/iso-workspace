@@ -43,7 +43,7 @@ fn serde_serialize() -> Result<()> {
     };
 
     let test: String = serde_json::to_string(&test_serialize).unwrap();
-    assert_eq!(test, "{\"text\":\"test\",\"currency\":{\"code\":\"USD\",\"numeric\":\"840\",\"units\":2,\"symbol\":\"$\",\"countries\":\"AS,BQ,IO,EC,SV,GU,HT,MH,FM,MP,PW,PA,PR,TL,TC,UM,US,VG,VI\"},\"numeric\":\"104\",\"code\":\"USD\"}");
+    assert_eq!(test, "{\"text\":\"test\",\"currency\":{\"code\":\"USD\",\"numeric\":\"840\",\"units\":2,\"name\":\"US Dollar\",\"symbol\":\"$\",\"countries\":\"AS,BQ,IO,EC,SV,GU,HT,MH,FM,MP,PW,PA,PR,TL,TC,UM,US,VG,VI\"},\"numeric\":\"104\",\"code\":\"USD\"}");
 
     Ok(())
 }

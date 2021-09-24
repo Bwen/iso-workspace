@@ -7,7 +7,9 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
-  "eslintIgnore": ["*riso-wasm/pkg/*"],
+  "eslintIgnore": [
+    "*riso-wasm/pkg/*"
+  ],
   "dependencies": {
     "core-js": "^3.6.5",
     "primeflex": "^2.0.0",

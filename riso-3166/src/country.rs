@@ -74,7 +74,12 @@ impl TryFor<usize> for Country {
 impl TryFor<&str> for Country {
     fn try_for(value: &str) -> Result<&'static Self, &'static str> {
         if value.parse::<usize>().is_ok() {
-            let numeric = format!("{:0>3}", value);
+            let mut numeric = value.parse::<usize>().unwrap();
+            if Numeric::transitional_map().contains_key(&numeric) {
+                numeric = *Numeric::transitional_map().get(&numeric).expect("Infallible");
+            }
+
+            let numeric = format!("{:0>3}", numeric);
             let result = COUNTRIES.iter().find(|country| country.numeric.to_string() == numeric);
             if result.is_some() {
                 return Ok(result.expect("Infallible"));
@@ -84,7 +89,12 @@ impl TryFor<&str> for Country {
         }
 
         if value.len() == 2 {
-            let result = COUNTRIES.iter().find(|country| country.alpha2.to_string() == value.to_ascii_uppercase());
+            let mut alpha2 = value;
+            if Alpha2::transitional_map().contains_key(value) {
+                alpha2 = Alpha2::transitional_map().get(value).expect("Infallible");
+            }
+
+            let result = COUNTRIES.iter().find(|country| country.alpha2.to_string() == alpha2.to_ascii_uppercase());
             if result.is_some() {
                 return Ok(result.expect("Infallible"));
             }
@@ -93,7 +103,12 @@ impl TryFor<&str> for Country {
         }
 
         if value.len() == 3 {
-            let result = COUNTRIES.iter().find(|country| country.alpha3.to_string() == value.to_ascii_uppercase());
+            let mut alpha3 = value;
+            if Alpha3::transitional_map().contains_key(value) {
+                alpha3 = Alpha3::transitional_map().get(value).expect("Infallible");
+            }
+
+            let result = COUNTRIES.iter().find(|country| country.alpha3.to_string() == alpha3.to_ascii_uppercase());
             if result.is_some() {
                 return Ok(result.expect("Infallible"));
             }

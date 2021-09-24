@@ -92,7 +92,7 @@ fn update_country_details_data_file(data: Vec<Vec<String>>) {
     for (index, line) in data[0].iter().enumerate() {
         let mut neightboors = String::from("");
         if !data[8][index].is_empty() {
-            let countries = data[8][index]
+            let mut countries = data[8][index]
                 .split(',')
                 .map(|v| {
                     if Alpha2::transitional_map().contains_key(v) {
@@ -102,6 +102,7 @@ fn update_country_details_data_file(data: Vec<Vec<String>>) {
                 })
                 .collect::<Vec<&str>>();
 
+            countries.dedup();
             neightboors = countries.join(",");
         }
 
