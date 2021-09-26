@@ -31,13 +31,13 @@ export default {
         changeTheme() {
             let theme = this.checked ? 'saga-blue' : 'vela-blue';
             let themeElement = document.getElementById('theme-link');
-            themeElement.setAttribute('href', `/themes/${theme}/theme.css`);
+            themeElement.setAttribute('href', `${process.env.BASE_URL}/themes/${theme}/theme.css`);
             localStorage.setItem('theme', theme);
         },
     },
     data() {
         return {
-            checked: localStorage.getItem('theme') == 'saga-blue',
+            checked: localStorage.getItem('theme') === 'saga-blue',
             items: [
                 {
                     label:'ISO-639',

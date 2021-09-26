@@ -36,7 +36,7 @@ export default {
     },
     changeTheme(theme) {
       let themeElement = document.getElementById('theme-link');
-      themeElement.setAttribute('href', `/themes/${theme}/theme.css`);
+      themeElement.setAttribute('href', `${process.env.BASE_URL}/themes/${theme}/theme.css`);
       localStorage.setItem('theme', theme);
     },
   }
