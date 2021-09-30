@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -euxo pipefail
+
+cd riso-wasm
+wasm-pack build
+cd pkg
+npm link
+
+cd ../../riso-site
+npm install --no-save
+npm run build

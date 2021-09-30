@@ -31,7 +31,7 @@ export default {
         changeTheme() {
             let theme = this.checked ? 'saga-blue' : 'vela-blue';
             let themeElement = document.getElementById('theme-link');
-            themeElement.setAttribute('href', `${process.env.BASE_URL}/themes/${theme}/theme.css`);
+            themeElement.setAttribute('href', `themes/${theme}/theme.css`);
             localStorage.setItem('theme', theme);
         },
     },
