@@ -1,24 +1,6 @@
-# riso-site
 
-## Project setup
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
+Run preview completely standalone:
+```bash
 npm run build
+docker run --name svelte-preview -p 9090:80 --rm -v $(pwd)/build:/usr/share/nginx/html:ro -d nginx
 ```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).

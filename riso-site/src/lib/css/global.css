@@ -1,0 +1,9 @@
+
+.country-flag {
+    font-size: 2.5em;
+    line-height: 1.25em;
+}
+
+[theme^="default"] .table-data tr td:nth-child(1) {
+    padding-left: .5em;
+}

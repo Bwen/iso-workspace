@@ -1,6 +1,0 @@
-/.tmp/
-/config/
-/dist/
-/*.js
-/test/unit/coverage/
-*/**/*wasm*.js
